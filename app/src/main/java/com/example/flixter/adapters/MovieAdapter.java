@@ -1,11 +1,14 @@
 package com.example.flixter.adapters;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,18 +64,42 @@ public class MovieAdapter extends  RecyclerView.Adapter<MovieAdapter.ViewHolder>
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
+        RatingBar rbRating;
+        TextView tvRating;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            rbRating = itemView.findViewById(R.id.rbRating);
+            tvRating = itemView.findViewById(R.id.tvRating);
         }
 
         public void bind(Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
-            Glide.with(context).load(movie.getPosterPath()).into(ivPoster);
+
+            String imageUrl;
+            // if phone is in landscape
+            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                // then imageUrl is a back drop image
+                imageUrl = movie.getBackdropPath();
+
+                // set rating
+                Float rating = (float) (movie.getRating() / 2.0);
+                rbRating.setRating((float) (movie.getRating() / 2.0));
+                tvRating.setText(rating.toString());
+            } else {
+                // else imageUrl is a poster image
+                imageUrl = movie.getPosterPath();
+            }
+
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_foreground)
+                    .into(ivPoster);
         }
     }
 }
