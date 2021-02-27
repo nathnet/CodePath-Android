@@ -21,8 +21,8 @@ import okhttp3.Headers;
 
 public class DetailActivity extends YouTubeBaseActivity {
 
-    private static final String YOUTUBE_API_KEY = "AIzaSyAyRZnOwRB0ehFyqB3qtsYX7vPCNtTLAGk";
-    public static final String VIDEOS_URL = "https://api.themoviedb.org/3/movie/%d/videos?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
+    private static final String YOUTUBE_API_KEY = "AIzaSyAjEcDy9d3svrLWqNbD83qSqrgy-0JQGiI";
+    public static final String VIDEOS_URL = "https://api.themoviedb.org/3/movie/%s/videos?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
 
     TextView tvTitle;
     TextView tvOverview;
@@ -44,11 +44,12 @@ public class DetailActivity extends YouTubeBaseActivity {
         tvOverview.setText(movie.getOverview());
         ratingBar.setRating((float) movie.getRating());
 
+        Log.d("DetailActivity", movie.getMovieId());
+
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(String.format(VIDEOS_URL, movie.getMovieId()), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Headers headers, JSON json) {
-                Log.d("DetailActivity", "onJsonHttpResponseHandlerSuccess");
                 try {
                     JSONArray results = json.jsonObject.getJSONArray("results");
                     if (results.length() == 0) {
